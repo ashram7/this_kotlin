@@ -8,7 +8,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var myName = "홍길동"
+        val myName = "홍길동"
         var myAge : Int
         myAge = 27
         myAge += 1
