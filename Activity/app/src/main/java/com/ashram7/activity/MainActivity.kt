@@ -29,6 +29,6 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, SubActivity::class.java)
         intent.putExtra("from1", "Hello Bundle")
         intent.putExtra("from2", 2022)
-        binding.btnStart.setOnClickListener {startActivity(intent)}
+        binding.btnStart.setOnClickListener {activityResult.launch(intent)}
     }
 }
