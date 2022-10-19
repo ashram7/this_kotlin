@@ -2,6 +2,7 @@ package com.ashram7.containerrecyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.ashram7.containerrecyclerview.databinding.ItemRecyclerBinding
 import java.text.SimpleDateFormat
@@ -25,6 +26,13 @@ class CustomAdapter: RecyclerView.Adapter<Holder>()  {
 }
 
 class Holder(val binding: ItemRecyclerBinding): RecyclerView.ViewHolder(binding.root) {
+    init {
+        binding.root.setOnClickListener {
+            Toast.makeText(binding.root.context, "클릭된 아이템 = ${binding.textTitle.text}", Toast
+                .LENGTH_LONG).show()
+        }
+    }
+
     fun setMemo(memo: Memo){
         binding.textNo.text = "${memo.no}"
         binding.textTitle.text = memo.title
