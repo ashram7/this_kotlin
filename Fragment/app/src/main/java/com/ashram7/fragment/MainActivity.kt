@@ -2,23 +2,32 @@ package com.ashram7.fragment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.ashram7.fragment.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    val binding by lazy { ActivityMainBinding.inflate(layoutInflater)}
+    lateinit var  listFragment:ListFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
         setFragment()
+
+        binding.btnSend.setOnClickListener {
+            listFragment.setValue("전달할 값")
+        }
     }
 
     fun setFragment() {
-        //ListFragment를 생성
-        val listFragment: ListFragment = ListFragment()
-        // 프래그먼트 매니저를 통해서 트랜잭션을 시작하고, 시작한 트랜잭션을 변수에 저장
+        listFragment = ListFragment()
+
+        var bundle = Bundle()
+        bundle.putString("key1", "List Fragment")
+        bundle.putInt("key2", 20220101)
+        listFragment.arguments = bundle
+
         val transaction = supportFragmentManager.beginTransaction()
-        // 트랜잭션의 add() 메서드로 frameLayout을 id로 가지고 있는 레이아웃에 앞에서 생성한 listFragment 삽입
         transaction.add(R.id.frameLayout, listFragment)
-        // setFragment() 메서드 안에 다음과 같이 ListFragment를 생성
         transaction.commit()
     }
 
@@ -34,14 +43,3 @@ class MainActivity : AppCompatActivity() {
         onBackPressed()
     }
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -1,3 +1,4 @@
+
 package com.ashram7.fragment
 
 import android.content.Context
@@ -10,16 +11,22 @@ import com.ashram7.fragment.databinding.FragmentListBinding
 
 class ListFragment : Fragment() {
     var mainActivity: MainActivity? = null
+    lateinit var  binding:FragmentListBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_list, container, false)
-        val binding = FragmentListBinding.inflate(inflater, container, false)
+        binding = FragmentListBinding.inflate(inflater, container, false)
         binding.btnNext.setOnClickListener { mainActivity?.goDetail() }
+
+        binding.textTitle.text = arguments?.getString("key1")
+        binding.textValue.text = "${arguments?.getInt("key2")}"
         return binding.root
+    }
+
+    fun setValue(value: String) {
+        binding.textFromActivity.text = value
     }
 
     override fun onAttach(context: Context) {
