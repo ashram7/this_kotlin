@@ -10,18 +10,17 @@ import com.ashram7.permission.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-
     lateinit var  activityResult: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        activityResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) {isGranted ->
-            if(isGranted){
-                startProcess()
+        activityResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if(it){
+                startProcess() //승인이면 프로그램 진행
             }else{
-                finish()
+                finish() //미승인이면 앱 종료
             }
         }
 
@@ -29,10 +28,10 @@ class MainActivity : AppCompatActivity() {
             activityResult.launch(Manifest.permission.CAMERA)
         }
     }
+
     fun startProcess(){
         Toast.makeText(this,
             "카메라를 실행합니다.",
             Toast.LENGTH_LONG).show()
     }
-
 }
