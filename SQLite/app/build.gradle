@@ -5,9 +5,7 @@ plugins {
 
 android {
     compileSdk 32
-    buildFeatures {
-        viewBinding true
-    }
+
     defaultConfig {
         applicationId "com.ashram7.sqlite"
         minSdk 18
