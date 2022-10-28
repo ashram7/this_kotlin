@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +51,15 @@ class MainActivity : AppCompatActivity() {
 
         override fun onServiceDisconnected(name: ComponentName) {
             isService = false
+        }
+    }
+
+    fun callServiceFunction(view: View) {
+        if (isService) {
+            val message = myService?.serviceMessage()
+            Toast.makeText(this, "message=${message}", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "서비스가 연결되지 않았습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 }
