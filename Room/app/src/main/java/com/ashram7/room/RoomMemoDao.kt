@@ -1,10 +1,7 @@
 package com.ashram7.room
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import androidx.room.Query
 
 @Dao
 interface RoomMemoDao {
@@ -16,4 +13,7 @@ interface RoomMemoDao {
 
     @Delete
     fun delete(memo: RoomMemo)
+
+    @Update
+    fun update(memo:RoomMemo)
 }
