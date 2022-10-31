@@ -1,0 +1,138 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="initial-scale=1.0, width=device-width">
+<title>POLAR Note 앱</title>
+
+<!-- 제이쿼리모바일, 제이쿼리, 폰갭 라이브러리 파일(다운로드 방식)  -->  
+<link rel="stylesheet" href="jquery.mobile/jquery.mobile-1.4.5.min.css"/>
+<script src="jquery.mobile/jquery-1.11.1.min.js"></script>
+<script src="jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
+<script src="cordova.js"></script>
+
+<!-- 구글맵 API 라이브러리 파일(CDN 방식)  -->
+<script src="http://maps.google.com/maps/api/js?sensor=true&language=ko"></script>  
+
+<!-- jquery-ui-map 플러그인 라이브러리 파일(다운로드 방식)  -->
+<script src="ui/min/jquery.ui.map.full.min.js"></script>  
+<script src="ui/jquery.ui.map.extensions.js"></script>	 
+
+<!-- 사용자 정의 자바스크립트 파일  -->
+<script src="dbHandle.js"></script>	
+<script src="photoHandle.js"></script>	
+<script src="cafeDisplay.js"></script>
+	
+<script> 	
+	// 전역변수
+	var db = null;     		// DB 객체
+	var varCafeName;   		// 현재 PolorNote 이름
+	var recordSet = null; 	// 현재 레코드셋
+	var varPosition = null; // 현재 레코드		
+	var flag;  				// 입력/수정 페이지 식별
+	
+	$(document).ready(function() {
+		// 폰갭 API 초기화
+		initPhoneGap();
+
+		// DB, Table 열기			
+	    openDB();  
+	    createTable();  
+ 						
+		// 이벤트 함수 정의	      		
+		$('#btnAdd').click(function() {
+			insertCafe(); 
+		});		
+	    $('#btnAddCancel').click( function(){
+			$('#cafeType2').val('미정').attr('selected', 'selected'); 
+			$('#cafeType2').selectmenu('refresh'); 
+			$('#cafeRegion2').val('미정').attr('selected', 'selected'); 
+			$('#cafeRegion2').selectmenu('refresh');
+			$('#cafeScore2').val('0').slider('refresh'); 
+			form2.reset();     		
+	    });	    
+		$('#btnModifySearch').click( function(){
+			var name = $('#sCafeName2').val();
+			selectCafeModify(name);
+		});
+		$('#btnUpdate').click( function(){  	
+			updateCafe();	
+		}); 
+		$('#btnDelete').click( function(){  	
+			deleteCafe();
+		}); 	    	      
+		$('#btnModifyCancel').click( function(){
+			$('#cafeType2').val('미정').attr('selected', 'selected'); 
+			$('#cafeType2').selectmenu('refresh'); 
+			$('#cafeRegion2').val('미정').attr('selected', 'selected'); 
+			$('#cafeRegion2').selectmenu('refresh');
+			$('#cafeScore2').val('0').slider('refresh'); 
+			form2.reset();     				
+		}); 	
+		$('#btnCafeListSearch').click( function(){
+		   selectCafeList(); 
+		});
+		$('#btnTakePic1').click( function(){
+			if ($('#cafePic1').val() == ''){
+				navigator.notification.alert('사진 이름을 먼저 입력하세요', null, '입력오류');	   			
+			} else {	   			
+				flag='enrol';
+				capturePhoto();
+			} 
+		});
+		$('#btnTakePic2').click( function(){
+			if ($('#cafePic2').val() == ''){
+				navigator.notification.alert('사진 이름을 먼저 입력하세요', null, '입력오류');	   			
+			} else {	   			
+				flag='modify';
+			   capturePhoto('change'); 
+			} 
+		});	    
+		$('#btnPicShow').click( function(){   
+			getCafePic(); 	    	   
+		});	
+		$('#btnMapShow').click( function(){   
+			getCafeAddressMap(); 	    	   
+		});
+		$('#btnRouteShow').click( function(){   
+			getCafeRouteMap(); 	    	   
+		});
+		});	
+
+		function initPhoneGap() {
+			document.addEventListener('deviceready', onDeviceReady, true);
+		}   
+		function onDeviceReady() {
+			navigator.notification.alert('장치 준비됨', null, '폰갭 API');
+		} 
+</script>
+<style type="text/css">
+	#logo { display: block; margin: 50px auto; }
+	.my_listview_img { padding:10px; }
+	#btnGroup { margin: 5px 5px; }
+	#picArea { width:100%; height: width*3/4; }
+	#mapArea, #routeArea { width:100%; height: 330px; }	
+</style>
+</head>
+
+<body>
+<div data-role="page" id="mainPage">
+	<div data-role="header" data-position="fixed">
+		<h1>POLAR Note</h1>
+		<a href="#page1" data-icon="home" data-iconpos="notext" class="ui-btn-right">Home</a>
+	</div>
+	<div data-role="content">
+		<img id="logo" src="polornote.gif">
+		<ul data-role="listview" data-inset="true" >
+			<li><a href="#cafeEnrolPage">POLAR Note 정보 등록</a></li>
+			<li><a href="#cafeModifyPage">POLAR Note 정보 수정</a></li>
+			<li><a href="#cafeSearchPage">POLAR Note 정보 조회</a></li>
+		</ul>
+	</div>
+	<div data-role="footer" data-position="fixed">
+		<h4>Save your memories with P-Note!</h4>
+	</div>
+</div>
+</body>
+</html>
+

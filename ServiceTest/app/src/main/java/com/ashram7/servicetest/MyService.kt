@@ -35,4 +35,8 @@ class MyService : Service() {
         }
     }
     val binder = MyBinder()
+
+    fun serviceMessage(): String{
+        return "Hello Activity! I am Service"
+    }
 }
