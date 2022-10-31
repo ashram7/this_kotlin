@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var cameraPermission:ActivityResultLauncher<String>
     lateinit var storagePermission:ActivityResultLauncher<String>
     lateinit var cameraLauncher:ActivityResultLauncher<Uri>
+    lateinit var galleryLauncher:ActivityResultLauncher<String>
 
     val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -52,12 +53,20 @@ class MainActivity : AppCompatActivity() {
             if(isSuccess) { binding.imagePreview.setImageURI(photoUri) }
         }
 
+        galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            binding.imagePreview.setImageURI(uri)
+        }
+
         storagePermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 
     fun setViews() {
         binding.buttonCamera.setOnClickListener {
             cameraPermission.launch(Manifest.permission.CAMERA)
+        }
+
+        binding.buttonGallery.setOnClickListener {
+            openGallery()
         }
     }
 
@@ -74,5 +83,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         cameraLauncher.launch(photoUri)
+    }
+
+    fun openGallery() {
+        galleryLauncher.launch("image/*")
     }
 }
