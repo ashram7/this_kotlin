@@ -27,11 +27,18 @@ class MyService : Service() {
         Log.d("Service", "서비스가 종료되었습니다.")
         super.onDestroy()
     }
+
     inner class MyBinder: Binder() {
         fun getService(): MyService {
             return  this@MyService
         }
     }
+
     val binder = MyBinder()
+
+    fun serviceMessage(): String{
+        return "Hello Activity! I am Service"
+    }
+
 
 }
