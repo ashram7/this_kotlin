@@ -27,16 +27,24 @@ class MusicRecyclerAdapter: RecyclerView.Adapter<MusicRecyclerAdapter.Holder>() 
     }
 
     inner class Holder(val binding: ItemRecyclerBinding) : RecyclerView.ViewHolder(binding.root) {
-        var musicUri: Uri? = null
+        var currentMusic:Music? = null
 
         init {
             binding.btnPlay.setOnClickListener {
-                if (mediaPlayer != null) {
-                    mediaPlayer?.release()
+                if(currentMusic?.isPlay == false) {
+                    if (mediaPlayer != null) {
+                        mediaPlayer?.release()
+                        mediaPlayer = null
+                    }
+                    mediaPlayer = MediaPlayer.create(itemView.context, currentMusic?.getMusicUri())
+                    mediaPlayer?.start()
+                    currentMusic?.isPlay = true
+                } else {
+                    mediaPlayer?.stop()
                     mediaPlayer = null
+                    currentMusic?.isPlay = false
                 }
-                mediaPlayer = MediaPlayer.create(binding.root.context, musicUri)
-                mediaPlayer?.start()
+                setPlayButton()
             }
         }
 
@@ -49,7 +57,16 @@ class MusicRecyclerAdapter: RecyclerView.Adapter<MusicRecyclerAdapter.Holder>() 
                 val duration = SimpleDateFormat("mm:ss").format(music.duration)
                 textDuration.text = duration
             }
-            this.musicUri = music.getMusicUri()
+            currentMusic = music
+            setPlayButton()
+        }
+
+        fun setPlayButton() {
+            if(currentMusic?.isPlay == false) {
+                binding.btnPlay.setImageResource(android.R.drawable.ic_media_play)
+            } else {
+                binding.btnPlay.setImageResource(android.R.drawable.ic_media_pause)
+            }
         }
     }
 }
