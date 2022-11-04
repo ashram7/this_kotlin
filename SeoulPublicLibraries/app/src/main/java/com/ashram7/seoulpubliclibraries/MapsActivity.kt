@@ -1,5 +1,7 @@
 package com.ashram7.seoulpubliclibraries
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -12,7 +14,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.ashram7.seoulpubliclibraries.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.maps.android.clustering.ClusterManager
 import data.Library
+import data.Row
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,6 +27,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+    // clusterManager 프로퍼티를 선언한다.
+    private lateinit var clusterManager: ClusterManager<Row>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +43,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
+        //클러스터 매니저 초기화
+        clusterManager = ClusterManager(this, mMap)
+        mMap.setOnCameraIdleListener(clusterManager)  // 화면을 이동 후 멈췄을 때 설정
+        mMap.setOnMarkerClickListener(clusterManager)  // 마커 클릭 설정
         loadLibraries()
     }
 
@@ -72,17 +81,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         /* 파라미터로 전달된 libraries의 SeoulPublicLibraryInfo.row에 도서관 목록이 담겨 있다.
         목록에서 반복문을 통해 하나씩 꺼낸다. */
         for (lib in libraries.SeoulPublicLibraryInfo.row) {
-            // 마커의 좌표를 생성한다.
-            val position = LatLng(lib.XCNTS.toDouble(), lib.YDNTS.toDouble())
-            // 좌표와 도서관 이름으로 마커를 생성한다.
-            val marker = MarkerOptions().position(position).title(lib.LBRRY_NAME)
-            // mMap.addMarker(marker)으로 마커를 지도에 추가한다.
-            mMap.addMarker(marker)
-            // 아직 작성(X) var obj = mMap.addMarker(marker)
-            // 아직 작성(X) obj.tag = lib.HMPG_URL
+            clusterManager.addItem(lib)
 
-            // 지도의 마커를 추가한 후에 latLngBounds에도 마커를 추가
-            latLngBounds.include(marker.position)
+            val position = LatLng(lib.XCNTS.toDouble(), lib.YDNTS.toDouble())
+
+            latLngBounds.include(position)
         }
         /* 현재 카메라가 시드니를 가리키므로 카메라 위치 조정이 필요한데, 마커 전체의 영역을 구하고,
         마커의 영역만큼 보여주는 코드 작성을 위해 마커의 영역을 저장하는 latLngBounds.build() 생성 */
