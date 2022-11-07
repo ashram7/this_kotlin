@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "174482625229",
+    "firebase_url": "https://this-is-android-with-kot-d7f5e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "this-is-android-with-kot-d7f5e",
+    "storage_bucket": "this-is-android-with-kot-d7f5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174482625229:android:a85093a40f99c0bee58f84",
+        "android_client_info": {
+          "package_name": "com.ashram7.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174482625229-80aekr34megrvo82jt1dil29gfd97n6p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0rttPnL4gUdUB-9U581II0blB7jM3G6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174482625229-80aekr34megrvo82jt1dil29gfd97n6p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:174482625229:android:c93912c05abbb174e58f84",
+        "android_client_info": {
+          "package_name": "com.ashram7.firebasechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "174482625229-80aekr34megrvo82jt1dil29gfd97n6p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0rttPnL4gUdUB-9U581II0blB7jM3G6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "174482625229-80aekr34megrvo82jt1dil29gfd97n6p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
