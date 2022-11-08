@@ -22,17 +22,16 @@ import com.google.firebase.ktx.Firebase
 class ChatListActivity : AppCompatActivity() {
     // 다음과 같이 binding를 생성한다.
     val binding by lazy { ActivityChatListBinding.inflate(layoutInflater)}
-    val database = Firebase.database("https://this-is-android-with-kot-d7f5e-default-rtdb.asia-southeast1.firebasedatabase.app/")
+    val database = Firebase.database("https://this-is-android-with-kot-942ef-default-rtdb.asia-southeast1.firebasedatabase.app/")
+
     // database와 rooms 노드를 연결한다.
     val roomsRef  = database.getReference("rooms")
+
     // 로그인한 사용자 정보를 다른 액티비티에서 사용할 수 있도록 companion object 로 생성
     companion object {
         var userId: String = ""
         var userName: String = ""
     }
-
-    val roomList = mutableListOf<Room>() // 파이어베이스에서 데이터를 불러온 후 저장할 변수
-    lateinit var adapter: ChatRoomListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,36 +39,11 @@ class ChatListActivity : AppCompatActivity() {
         // 인텐트로 넘어온 사용자 정보를 저장한다.
         userId = intent.getStringExtra("userId") ?: "none"
         userName = intent.getStringExtra("userName") ?: "Anonymous"
+
         // 방 만들기 버튼 클릭 시 openCreateRoom() 메서드를 호출하는 코드를 추가
         with(binding) {
             btnCreate.setOnClickListener { openCreateRoom() }
         }
-        adapter = ChatRoomListAdapter(roomList)
-        with(binding) {
-            recyclerRooms.adapter = adapter
-            recyclerRooms.layoutManager = LinearLayoutManager(baseContext)
-        }
-        loadRooms()
-    }
-
-    fun loadRooms() {
-        roomsRef.addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                // 방 목록 삭제
-                roomList.clear()
-                for(item in snapshot.children) {
-                    item.getValue(Room::class.java)?.let { room ->
-                        roomList.add(room) // 방 목록에 추가
-                    }
-                }
-                // 아답터 갱신
-                adapter.notifyDataSetChanged()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                print(error.message)
-            }
-        })
     }
 
     // 방 만들기 버튼을 클릭했을 때 호출하는 openCreateRoom() 메서드를 생성한다.
@@ -97,43 +71,5 @@ class ChatListActivity : AppCompatActivity() {
         room.id = roomId
         // 파이어베이스에 전송
         roomsRef.child(roomId).setValue(room)
-    }
-}
-
-
-
-class ChatRoomListAdapter(val roomList:MutableList<Room>)
-    : RecyclerView.Adapter<ChatRoomListAdapter.Holder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatRoomListAdapter.Holder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false)
-        return Holder(view)
-    }
-
-    override fun onBindViewHolder(holder: ChatRoomListAdapter.Holder, position: Int) {
-        val room = roomList.get(position)
-        holder.setRoom(room)
-    }
-
-    override fun getItemCount(): Int {
-        return roomList.size
-    }
-
-    class Holder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        lateinit var mRoom:Room
-        init {
-            itemView.setOnClickListener {
-                val intent = Intent(itemView.context, ChatRoomActivity::class.java)
-                intent.putExtra("roomId", mRoom.id)
-                intent.putExtra("roomTitle", mRoom.title)
-
-                itemView.context.startActivity(intent)
-            }
-        }
-
-        fun setRoom(room:Room) {
-            this.mRoom = room
-            itemView.findViewById<TextView>(android.R.id.text1).setText(room.title)
-        }
     }
 }
