@@ -1,9 +1,11 @@
 package com.ashram7.firebasestorage
 
+import android.Manifest
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.ashram7.firebasestorage.databinding.ActivityMainBinding
 import com.google.firebase.ktx.Firebase
@@ -17,6 +19,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        binding.btnUpload.setOnClickListener {
+            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+    }
+
+    val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if(isGranted) {
+            // 2. 이미지 갤러리 런처를 호출
+            galleryLauncher.launch("image/*")
+        } else {
+            Toast.makeText(baseContext, "외부 저장소 읽기 권한을 승인해야 사용할 수 있습니다", Toast.LENGTH_LONG).show()
+        }
     }
 
     val galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
