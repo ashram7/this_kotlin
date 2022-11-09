@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.ashram7.firebasestorage.databinding.ActivityMainBinding
+import com.bumptech.glide.Glide
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
@@ -22,6 +23,20 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnUpload.setOnClickListener {
             permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+        binding.btnDownload.setOnClickListener {
+            // 여기서는 개인 폴더에 있는 이미지 경로를 설정
+            downloadImage("images/temp_1667957657429.jpeg")
+        }
+    }
+
+    fun downloadImage(path: String) {
+        // 스토리지 레퍼런스를 연결하고 이미지 url를 가져온다.
+        storage.getReference(path).downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(this).load(uri).into(binding.imageView)
+        }.addOnFailureListener {
+            Log.e("스토리지", "다운로드 에러=>${it.message}")
         }
     }
 
